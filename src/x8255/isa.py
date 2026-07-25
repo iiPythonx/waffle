@@ -88,76 +88,101 @@ INSTRUCTIONS = {
     ),
     0x0E: Instruction(
         [Register(), Register()],
-        "POW",
-        "POWER"
+        "AND",
+        "BITWISE AND"
     ),
     0x0F: Instruction(
+        [Register(), Register()],
+        "OR",
+        "BITWISE OR"
+    ),
+    0x10: Instruction(
+        [Register(), Register()],
+        "XOR",
+        "BITWISE EXCLUSIVE OR"
+    ),
+    0x11: Instruction(
+        [Register()],
+        "NOT",
+        "BITWISE NOT"
+    ),
+    0x12: Instruction(
+        [Register(), Register()],
+        "SHL",
+        "SHIFT LEFT"
+    ),
+    0x13: Instruction(
+        [Register(), Register()],
+        "SHR",
+        "SHIFT RIGHT"
+    ),
+    0x14: Instruction(
         [Register(), Register()],
         "CMP",
         "COMPARE"
     ),
-    0x10: Instruction(
+    0x15: Instruction(
         [Address()],
         "JEQ",
         "JUMP EQUAL"
     ),
-    0x11: Instruction(
+    0x16: Instruction(
         [Address()],
         "JNE",
         "JUMP NOT EQUAL"
     ),
-    0x12: Instruction(
+    0x17: Instruction(
         [Address()],
         "JGT",
         "JUMP GREATER THAN"
     ),
-    0x13: Instruction(
+    0x18: Instruction(
         [Address()],
         "JLT",
         "JUMP LESS THAN"
     ),
-    0x14: Instruction(
+    0x19: Instruction(
         [Address()],
         "JGE",
         "JUMP GREATER EQUAL"
     ),
-    0x15: Instruction(
+    0x1A: Instruction(
         [Address()],
         "JLE",
         "JUMP LESS EQUAL"
     ),
-    0x16: Instruction(
+    0x1B: Instruction(
         [Address()],
         "JMP",
         "JUMP"
     ),
-    0x17: Instruction(
+    0x1C: Instruction(
         [Address()],
         "CAL",
         "CALL SUBROUTINE"
     ),
-    0x18: Instruction([], "RET", "RETURN FROM SUBROUTINE"),
-    0x19: Instruction(
+    0x1D: Instruction([], "RET", "RETURN FROM SUBROUTINE"),
+    0x1E: Instruction(
         [Register()],
         "PSH",
         "PUSH REGISTER TO STACK"
     ),
-    0x1A: Instruction(
+    0x1F: Instruction(
         [Register()],
         "POP",
         "POP STACK TO REGISTER"
     ),
-    0x1B: Instruction(
+    0x20: Instruction(
         [Register()],
         "INC",
         "INCREMENT"
     ),
-    0x1C: Instruction(
+    0x21: Instruction(
         [Register()],
         "DEC",
         "DECREMENT"
     ),
-    0x1D: Instruction(
+    0x22: Instruction(
         [Register(), Register()],
         "MOV",
         "COPY REGISTER"
