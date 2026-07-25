@@ -31,7 +31,7 @@ class Emu8255:
 
     def write_register(self, register_id: int, value: int) -> None:
         offset = REGISTERS_BY_ID[register_id].address
-        self.write_range(value.to_bytes(2), offset)
+        self.write_range((value & 0xFFFF).to_bytes(2), offset)
 
     def push_stack(self, value: int) -> None:
         existing_offset = self.read_register(0xC)
@@ -188,5 +188,5 @@ class Emu8255:
         self.memory[offset:offset + len(data)] = data
 
     def terminate(self) -> None:
-        if (terminate_instruction := self.memory[0x2700]):
+        if (terminate_instruction := int.from_bytes(self.memory[0x2700:0x2702])):
             self.write_register(0xA, terminate_instruction)

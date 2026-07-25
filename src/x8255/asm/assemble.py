@@ -116,7 +116,7 @@ class Assembler:
                 self.code_block[address:address + 2] = subroutine_addresses[subroutine].to_bytes(2)
 
         if (terminate_address := subroutine_addresses.get("terminate")) is not None:
-            self.data_block[0x0700] = terminate_address
+            self.data_block[0x0700:0x0702] = terminate_address.to_bytes(2)
 
         if (main_address := subroutine_addresses.get("main")) is not None and zero_jump:
             self.code_block[1:3] = main_address.to_bytes(2)
