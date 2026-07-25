@@ -71,7 +71,7 @@ class Emu8255:
             case "LDI":
                 self.write_register(arguments[0], arguments[1])
 
-            case "ADD" | "SUB" | "MUL" | "DIV" | "POW" as op:
+            case "ADD" | "SUB" | "MUL" | "DIV" as op:
                 result = getattr(operator, {"DIV": "floordiv"}.get(op, op.lower()))(
                     self.read_register(arguments[0]),
                     self.read_register(arguments[1])
@@ -106,6 +106,39 @@ class Emu8255:
                 value = self.read_register(arguments[0])
                 if not self.drivers.on_write(offset, value):
                     self.write_range(value.to_bytes(data_size), offset)
+
+            case "AND":
+                self.write_register(
+                    arguments[0],
+                    self.read_register(arguments[0]) & self.read_register(arguments[1])
+                )
+
+            case "OR":
+                self.write_register(
+                    arguments[0],
+                    self.read_register(arguments[0]) | self.read_register(arguments[1])
+                )
+
+            case "XOR":
+                self.write_register(
+                    arguments[0],
+                    self.read_register(arguments[0]) ^ self.read_register(arguments[1])
+                )
+
+            case "NOT":
+                self.write_register(arguments[0], ~self.read_register(arguments[0]))
+
+            case "SHL":
+                self.write_register(
+                    arguments[0],
+                    self.read_register(arguments[0]) << self.read_register(arguments[1])
+                )
+
+            case "SHR":
+                self.write_register(
+                    arguments[0],
+                    self.read_register(arguments[0]) >> self.read_register(arguments[1])
+                )
 
             case "CMP":
                 left, right = self.read_register(arguments[0]), self.read_register(arguments[1])
