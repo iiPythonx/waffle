@@ -163,6 +163,12 @@ class Emu8255:
             case "JLE" if self.read_register(0xB) in {0, 255}:
                 self.write_register(0xA, arguments[0])
 
+            case "PSH":
+                self.push_stack(self.read_register(arguments[0]))
+
+            case "POP":
+                self.write_register(arguments[0], self.pop_stack())
+
             case "INC":
                 self.write_register(arguments[0], self.read_register(arguments[0]) + 1)
 
