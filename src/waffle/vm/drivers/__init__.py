@@ -3,7 +3,7 @@
 import typing
 import importlib
 
-from x8255.cli import cexit
+from waffle.cli import cexit
 
 class DriverManager:
     def __init__(self, memory: bytearray, enabled_drivers: list[str]) -> None:
@@ -17,7 +17,7 @@ class DriverManager:
         # Begin initializing drivers
         for package in enabled_drivers:
             try:
-                module = importlib.import_module(f"x8255.vm.drivers.{package}")
+                module = importlib.import_module(f"waffle.vm.drivers.{package}")
                 driver = getattr(module, "Driver")
                 if driver is None:
                     return cexit(f"Attempted to load driver '{package}', but it has no Driver class!")

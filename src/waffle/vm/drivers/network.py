@@ -1,10 +1,10 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: network
-# Purpose: Provide networking capabilities to 8255
+# Purpose: Provide networking capabilities to waffle
 
 import socket
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

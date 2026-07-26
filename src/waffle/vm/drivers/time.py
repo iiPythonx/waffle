@@ -1,7 +1,7 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: time
-# Purpose: Provide time related utilities to 8255
+# Purpose: Provide time related utilities to waffle
 #
 # Registers:
 #   W 0x0050 - Set item to read (see OPTIONS)
@@ -35,7 +35,7 @@ from time import perf_counter, sleep
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

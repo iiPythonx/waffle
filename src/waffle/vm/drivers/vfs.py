@@ -1,7 +1,7 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: vfs
-# Purpose: Provide a virtual file system (vfs) to 8255
+# Purpose: Provide a virtual file system (vfs) to waffle
 #
 # Registers:
 #   W 0x0040 - Set memory address containing target filename
@@ -14,7 +14,7 @@
 
 from pathlib import Path
 
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

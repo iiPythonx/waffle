@@ -5,7 +5,7 @@ import sys
 import time
 from itertools import batched
 
-from x8255.isa import INSTRUCTIONS, REGISTERS, Addresses
+from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
 
 REGISTERS_BY_NAME = {reg.name: reg for reg in REGISTERS}
 

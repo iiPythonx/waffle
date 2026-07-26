@@ -1,8 +1,8 @@
 # Copyright (c) 2026 iiPython
 
-from x8255.asm import exception
-from x8255.isa import INSTRUCTIONS, REGISTERS, Addresses
-from x8255.asm.token import ParseState
+from waffle.asm import exception
+from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
+from waffle.asm.token import ParseState
 
 REGISTERS_BY_NAME = {reg.name: reg for reg in REGISTERS}
 INSTRUCTS_BY_VERB = {v.opcode: (k, v) for k, v in INSTRUCTIONS.items()}

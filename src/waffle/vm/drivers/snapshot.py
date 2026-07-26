@@ -1,7 +1,7 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: snapshot
-# Purpose: Provide basic memory analysis capabilities to 8255
+# Purpose: Provide basic memory analysis capabilities to waffle
 #
 # Registers:
 #   W 0x0060 - Save memory snapshot to snapshot.bin
@@ -10,7 +10,7 @@
 #   swa r1, D_MEMORY_SNAPSHOT
 
 from pathlib import Path
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

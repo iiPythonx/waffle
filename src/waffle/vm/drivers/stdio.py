@@ -1,7 +1,7 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: stdio
-# Purpose: Provide general purpose I/O to 8255
+# Purpose: Provide general purpose I/O to waffle
 #
 # Registers:
 #   W 0x0020 - Send a character to the screen
@@ -36,7 +36,7 @@ import sys
 import tty
 import termios
 
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

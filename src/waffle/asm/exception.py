@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from x8255.asm.token import ParseState, parse_file
+from waffle.asm.token import ParseState, parse_file
 
 target_file: Path | None = None
 

@@ -3,14 +3,14 @@
 # Modules
 import operator
 
-from x8255.cli import cexit
-from x8255.isa import INSTRUCTIONS, REGISTERS, Addresses
-from x8255.vm.drivers import DriverManager
-from x8255.vm.debugger import Debugger
+from waffle.cli import cexit
+from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
+from waffle.vm.drivers import DriverManager
+from waffle.vm.debugger import Debugger
 
 REGISTERS_BY_ID = {reg.id: reg for reg in REGISTERS}
 
-class Emu8255:
+class Waffle:
     def __init__(self, enabled_drivers: list[str] = ["stdio"], enable_debugger: bool = False) -> None:
         self.memory = bytearray(0x4000)
 

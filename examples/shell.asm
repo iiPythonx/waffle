@@ -7,7 +7,7 @@ preload:
     .greeting   "\nWelcome to \033[32mNocturne Shell\033[0m!\nCopyright (c) 2026 iiPython\n\n"
     .goodbye    "\n\033[31mGoodbye!\033[0m\n"
     .no_cmd     "\033[32mNocturne\033[0m: no such command exists!\n"
-    .version    "\033[32mNocturne Shell\033[0m v0.3.0, powered by \033[34m8255\033[0m.\n"
+    .version    "\033[32mNocturne Shell\033[0m v0.3.0, powered by \033[34mwaffle\033[0m.\n"
     .help_pre   "Commands: "
     .help_green "\033[32m"
     .help_reset "\033[0m"

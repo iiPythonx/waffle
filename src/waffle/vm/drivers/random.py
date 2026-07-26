@@ -1,7 +1,7 @@
 # Copyright (c) 2026 iiPython
 
 # Driver: random
-# Purpose: Provide psuedo-random number generation to 8255
+# Purpose: Provide psuedo-random number generation to waffle
 #
 # Registers:
 #   R 0x0030 - Read a random 16-bit integer
@@ -18,7 +18,7 @@
 
 import random
 
-from x8255.vm.drivers import DriverManager
+from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

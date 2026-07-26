@@ -1,5 +1,5 @@
 <p align = "center">
-    <img alt = "8255 logo" src = ".github/logo.png">
+    <img alt = "waffle logo" src = ".github/logo.png">
     <hr>
 </p>
 
@@ -8,8 +8,8 @@ A 16-bit CPU with 16 KiB of RAM, for playing around with.
 ## Installation
 
 ```bash
-git clone git@github.com:iiPythonx/8255
-cd 8255
+git clone git@github.com:iiPythonx/waffle
+cd waffle
 
 # Activate environment
 uv venv
@@ -17,8 +17,8 @@ source .venv/bin/activate
 uv pip install -e .
 
 # Run the clock example
-8255asm -Z -d time,stdio examples/clock.asm
-8255emu examples/clock.bin
+waffleasm -Z -d time,stdio examples/clock.asm
+waffleemu examples/clock.bin
 ```
 
 ## Features
@@ -107,7 +107,7 @@ V = VALUE (ASM EMBEDDED)
 
 ### Drivers
 
-See the [vm/drivers](./src/x8255/vm/drivers) tree for a list of drivers.  
+See the [vm/drivers](./src/waffle/vm/drivers) tree for a list of drivers.  
 It's up to the driver maintainer to produce accurate documentation regarding their use.
 
 ## Labels
@@ -127,8 +127,8 @@ Referencing it can be done with `ldi r1, &hello`, which will load the string's m
 
 ### Main
 
-No main label is required to be used, as the only requirement of 8255 assembly is that ONE label exists (of which preload does not count).  
-If you do add a main label, however, you will likely want to make use of the `-Z` (`--zero-jump`) flag on `8255asm`, which will auto jump to main on program init.
+No main label is required to be used, as the only requirement of waffle assembly is that ONE label exists (of which preload does not count).  
+If you do add a main label, however, you will likely want to make use of the `-Z` (`--zero-jump`) flag on `waffleasm`, which will auto jump to main on program init.
 
 ### Terminate
 
@@ -138,13 +138,13 @@ This block is read when CTRL+C is pressed, and the CPU will immediately jump to 
 
 ## Debugger
 
-Run `8255emu` with the `-D` (`--debug`) option to enable the built-in system debugger.
+Run `waffleemu` with the `-D` (`--debug`) option to enable the built-in system debugger.
 
-![8255 debugger](.github/debugger.png)
+![waffle debugger](.github/debugger.png)
 
 ## Inspiration
 
-8255 is based on [BASIC](https://en.wikipedia.org/wiki/BASIC) and [Assembly](https://en.wikipedia.org/wiki/Assembly_language).  
+waffle is based on [BASIC](https://en.wikipedia.org/wiki/BASIC) and [Assembly](https://en.wikipedia.org/wiki/Assembly_language).  
 The CPU itself has no real backing inspiration, it's just a normal 16-bit chip w/ RAM.
 
 ## Copyright

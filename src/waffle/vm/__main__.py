@@ -4,9 +4,9 @@ import gzip
 from time import sleep
 from pathlib import Path
 
-from x8255.cli import p, cexit
-from x8255.isa import Addresses
-from x8255.vm.core import Emu8255
+from waffle.cli import p, cexit
+from waffle.isa import Addresses
+from waffle.vm.core import Waffle
 
 def main() -> None:
     p.add_argument("-s", "--speed", type = int, help = "emulation speed in hertz, default: no limit", default = 0)
@@ -51,7 +51,7 @@ def main() -> None:
     bytecode = bytecode[driver_offset + 1:]
 
     # Setup emulation
-    system = Emu8255(
+    system = Waffle(
         enabled_drivers = enabled_drivers,
         enable_debugger = args.debug
     )
