@@ -2,16 +2,17 @@
 
 # Modules
 import operator
+import sys
 
 from waffle.cli import cexit
 from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
-from waffle.vm.drivers import DriverManager
 from waffle.vm.debugger import Debugger
+from waffle.vm.drivers import DriverManager
 
 REGISTERS_BY_ID = {reg.id: reg for reg in REGISTERS}
 
 class Waffle:
-    def __init__(self, enabled_drivers: list[str] = ["stdio"], enable_debugger: bool = False) -> None:
+    def __init__(self, enabled_drivers: list[str] | None = None, enable_debugger: bool = False) -> None:
         self.memory = bytearray(0x4000)
 
         # Initialize stack
@@ -23,7 +24,7 @@ class Waffle:
             self.debugger = Debugger(self.memory)
 
         # Load drivers
-        self.drivers = DriverManager(self.memory, enabled_drivers)
+        self.drivers = DriverManager(self.memory, enabled_drivers or ["stdio"])
 
     def read_register(self, register_id: int) -> int:
         offset = REGISTERS_BY_ID[register_id].address
@@ -41,6 +42,9 @@ class Waffle:
 
     def pop_stack(self) -> int:
         existing_offset = self.read_register(0xC) - 2
+        if not existing_offset:
+            return -1
+
         stack_offset = Addresses.STACK.end - existing_offset
         self.write_register(0xC, existing_offset)
         return int.from_bytes(self.memory[stack_offset:stack_offset + 2])
@@ -66,7 +70,7 @@ class Waffle:
         # Evaluate
         match instruction.opcode:
             case "HLT":
-                exit()
+                sys.exit()
 
             case "LDI":
                 self.write_register(arguments[0], arguments[1])
@@ -86,7 +90,11 @@ class Waffle:
                 self.write_register(0xA, arguments[0])
 
             case "RET":
-                self.write_register(0xA, self.pop_stack())
+                return_line = self.pop_stack()
+                if return_line == -1:
+                    sys.exit()
+
+                self.write_register(0xA, return_line)
 
             case "LBA" | "LBR" | "LWA" | "LWR" as op:
                 offset, data_size = arguments[1], 1 if op[1] == "B" else 2
@@ -167,7 +175,7 @@ class Waffle:
                 self.push_stack(self.read_register(arguments[0]))
 
             case "POP":
-                self.write_register(arguments[0], self.pop_stack())
+                self.write_register(arguments[0], max(self.pop_stack(), 0))
 
             case "INC":
                 self.write_register(arguments[0], self.read_register(arguments[0]) + 1)
