@@ -1,5 +1,5 @@
 preload:
-    .hello "Hello, world!"
+    hello: .string "Hello, world!"
 
 halt:
     hlt

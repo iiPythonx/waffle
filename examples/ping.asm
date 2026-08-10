@@ -1,13 +1,13 @@
 ; Copyright (c) 2026 iiPython
 
 preload:
-    .host        "1.1.1.1"
-    .ping        "PING "
-    .failure     "The client received an invalid response.\n"
-    .packet_size "size="
-    .packet_seq  "icmp_seq="
-    .packet_time "time="
-    .packet_ms   " ms"
+    host:        .string "1.1.1.1"
+    ping:        .string "PING "
+    failure:     .string "The client received an invalid response.\n"
+    packet_size: .string "size="
+    packet_seq:  .string "icmp_seq="
+    packet_time: .string "time="
+    packet_ms:   .string " ms"
 
 generate_checksum_loop:
 

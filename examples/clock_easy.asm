@@ -1,5 +1,5 @@
 preload:
-    .strftime "The current time is %H:%M:%S %p."
+    strftime: .string "The current time is %H:%M:%S %p."
 
 terminate:
     hlt

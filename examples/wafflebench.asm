@@ -10,12 +10,12 @@
 ; R8 - Maximum score
 
 preload:
-    .dots     "... "
-    .minimum  "Minimum score: \033[32m"
-    .average  "Average score: \033[32m"
-    .maximum  "Maximum score: \033[32m"
-    .hertz    " Hz\033[0m\n"
-    .benching "Benchmarking... (fifteen runs)\n\n"
+    dots:     .string "... "
+    minimum:  .string "Minimum score: \033[32m"
+    average:  .string "Average score: \033[32m"
+    maximum:  .string "Maximum score: \033[32m"
+    hertz:    .string " Hz\033[0m\n"
+    benching: .string "Benchmarking... (fifteen runs)\n\n"
 
 terminate:
     hlt

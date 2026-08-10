@@ -1,9 +1,9 @@
 preload:
-    .time   "The current time is "
-    .on     " on "
-    .invis  "\033[?25l"
-    .show   "\033[?25h"
-    .escape "\033["
+    time:   .string "The current time is "
+    on:     .string " on "
+    invis:  .string "\033[?25l"
+    show:   .string "\033[?25h"
+    escape: .string "\033["
 
 fix_hour:
     sub r1, r2

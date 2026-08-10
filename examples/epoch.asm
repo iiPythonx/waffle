@@ -1,6 +1,6 @@
 preload:
-    .a "It has been "
-    .b " years since the UNIX epoch.\n"
+    a: .string "It has been "
+    b: .string " years since the UNIX epoch.\n"
 
 main:
 

@@ -12,7 +12,7 @@ class ParseState:
     lines:   list[list[str]]
     labels:  dict[str, int]
     label:   str | None
-    preload: dict[str, str]
+    preload: dict[str, bytes]
 
 @dataclass
 class LineState:
@@ -24,7 +24,7 @@ class ParseException(Exception):
     pass
 
 RE_LABEL = re.compile(r"^(\w+):$")
-RE_PRELOAD_LINE = re.compile(r"^\.(\w+)\s+\"(.+)\"$")
+RE_PRELOAD_LINE = re.compile(r"^\s*(\w+):\s+\.(\w+)\s+(\"(?:[^\"\\]|\\.)*\"|0x[0-9a-fA-F]+|\d+)")
 
 def parse_line(line: str) -> list[str]:
     state = LineState("", [], False)
@@ -92,12 +92,32 @@ def parse_file(file: Path, callback: typing.Callable | None = None) -> ParseStat
             if state.label != "preload":
                 raise ParseException("Found a preload line outside of the preload section!")
 
-            key, value = preload_match.groups()
-            for index, character in enumerate(value):
-                if character == "\"" and (index and value[index - 1] != "\\" or not index):
-                    raise ParseException("Found a non-escaped double quote inside of a preload string!")
+            key, type, value = preload_match.groups()
+            match type:
+                case "byte" | "short" | "word":
+                    value = int(value, 16 if value.startswith("0x") else 10)
+                    if type == "byte" and value > 255:
+                        raise ParseException("Cannot store a byte with a value above 255!")
 
-            state.preload[key] = value.encode("utf-8").decode("unicode-escape")
+                    value = value.to_bytes(1 if type == "byte" else 2)
+
+                case "ascii" | "string" | "asciz":
+                    value = value[1:-1]
+                    for index, character in enumerate(value):
+                        if character == "\"" and (index and value[index - 1] != "\\" or not index):
+                            raise ParseException("Found a non-escaped double quote inside of a preload string!")
+
+                    value = value.encode("utf-8").decode("unicode-escape").encode("utf-8")
+                    if type != "ascii":
+                        value += b"\0"
+
+                case _:
+                    raise ParseException("Found a preload line with an invalid format!")
+
+            if not isinstance(value, bytes):
+                raise ParseException("Exception occured while interpreting preload line!")
+
+            state.preload[key] = value
             continue
 
         if state.label == "preload" and preload_match is None:

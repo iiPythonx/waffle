@@ -1,6 +1,6 @@
 [project]
 name = "waffle"
-version = "2.1.0"
+version = "2.2.0"
 description = "A 16-bit CPU with 16 KiB of RAM."
 readme = "README.md"
 requires-python = ">=3.12"
