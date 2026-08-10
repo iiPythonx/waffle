@@ -50,24 +50,24 @@ class Driver:
             self.variables["socket_protocol"]
         )
 
-    def send_packet(self, memory: bytearray, value: int) -> None:
-        if self.socket is None:
+        if "target_port" not in self.variables or "target_host_address" not in self.variables:
             return
-
-        # Sanity checking
-        for v in ("target_host_address", "target_port", "packet_address", "packet_size"):
-            if v not in self.variables:
-                return
 
         target_host = memory[self.variables["target_host_address"]:].split(b"\0")[0].decode()
         target_port = self.variables["target_port"]
 
+        self.socket.connect((target_host, target_port))
+
+    def send_packet(self, memory: bytearray, value: int) -> None:
+        if self.socket is None:
+            return
+
+        if "packet_address" not in self.variables or "packet_size" not in self.variables:
+            return
+
         # Send packet to host
         address = self.variables["packet_address"]
-        self.socket.sendto(
-            memory[address:address + self.variables["packet_size"]],
-            (target_host, target_port)
-        )
+        self.socket.send(memory[address:address + self.variables["packet_size"]])
 
     def receive(self, memory: bytearray) -> int:
         if self.socket is not None and "receive_address" in self.variables:

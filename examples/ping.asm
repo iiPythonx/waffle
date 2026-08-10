@@ -157,17 +157,6 @@ send_ping:
     swa r2, D_SELECT_NET_VARIABLE
     swa r3, D_WRITE_NET_VARIABLE
 
-    ; set host and port
-    ldi r1, 6
-    swa r1, D_SELECT_NET_VARIABLE
-    ldi r1, &host
-    swa r1, D_WRITE_NET_VARIABLE
-
-    ldi r1, 7
-    swa r1, D_SELECT_NET_VARIABLE
-    ldi r1, 0
-    swa r1, D_WRITE_NET_VARIABLE
-
     ; send packet
     swa r1, D_ZERO_CLOCK
     swa r1, D_NET_SEND
@@ -253,6 +242,17 @@ main:
     swa r1, D_WRITE_STR
     ldi r1, 10
     swa r1, D_WRITE_CHR
+
+    ; set host and port
+    ldi r1, 6
+    swa r1, D_SELECT_NET_VARIABLE
+    ldi r1, &host
+    swa r1, D_WRITE_NET_VARIABLE
+
+    ldi r1, 7
+    swa r1, D_SELECT_NET_VARIABLE
+    ldi r1, 0
+    swa r1, D_WRITE_NET_VARIABLE
 
     ; create socket
     ldi r1, 1
