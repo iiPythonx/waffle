@@ -2,8 +2,9 @@
 
 import re
 import typing
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
+
 
 @dataclass
 class ParseState:
@@ -18,6 +19,9 @@ class LineState:
     buffer: str
     chunks: list[str]
     nested: bool
+
+class ParseException(Exception):
+    pass
 
 RE_LABEL = re.compile(r"^(\w+):$")
 RE_PRELOAD_LINE = re.compile(r"^\.(\w+)\s+\"(.+)\"$")
@@ -34,7 +38,7 @@ def parse_line(line: str) -> list[str]:
 
         if state.buffer.endswith(","):
             if len(state.chunks) != 1:
-                raise Exception("Found a comma in an incorrect location!")
+                raise ParseException("Found a comma in an incorrect location!")
 
             state.buffer = state.buffer[:-1]
 
@@ -42,7 +46,7 @@ def parse_line(line: str) -> list[str]:
         state.buffer = ""
 
         if len(state.chunks) > 3:
-            raise Exception("Too many arguments present for line!")
+            raise ParseException("Too many arguments present for line!")
 
     for character in line:
         if character == ";" and not state.nested:
@@ -86,18 +90,18 @@ def parse_file(file: Path, callback: typing.Callable | None = None) -> ParseStat
         preload_match = RE_PRELOAD_LINE.match(line)
         if preload_match is not None:
             if state.label != "preload":
-                raise Exception("Found a preload line outside of the preload section!")
+                raise ParseException("Found a preload line outside of the preload section!")
 
             key, value = preload_match.groups()
             for index, character in enumerate(value):
                 if character == "\"" and (index and value[index - 1] != "\\" or not index):
-                    raise Exception("Found a non-escaped double quote inside of a preload string!")
+                    raise ParseException("Found a non-escaped double quote inside of a preload string!")
 
             state.preload[key] = value.encode("utf-8").decode("unicode-escape")
             continue
 
         if state.label == "preload" and preload_match is None:
-            raise Exception("Found a non-preload line inside of the preload section!")
+            raise ParseException("Found a non-preload line inside of the preload section!")
 
         # Normal lines
         state.lines.append(parse_line(line))

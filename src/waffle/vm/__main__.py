@@ -1,12 +1,13 @@
 # Copyright (c) 2026 iiPython
 
 import gzip
-from time import sleep
 from pathlib import Path
+from time import sleep
 
-from waffle.cli import p, cexit
+from waffle.cli import cexit, p
 from waffle.isa import Addresses
 from waffle.vm.core import Waffle
+
 
 def main() -> None:
     p.add_argument("-s", "--speed", type = int, help = "emulation speed in hertz, default: no limit", default = 0)

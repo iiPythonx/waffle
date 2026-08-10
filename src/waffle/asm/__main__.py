@@ -4,11 +4,12 @@ import gzip
 from pathlib import Path
 from time import perf_counter
 
-from waffle.cli import p, cexit
-from waffle.vm.drivers import DriverManager
-from waffle.asm.token import parse_file
-from waffle.asm.assemble import Assembler
 from waffle.asm import exception
+from waffle.asm.assemble import Assembler
+from waffle.asm.token import parse_file
+from waffle.cli import cexit, p
+from waffle.vm.drivers import DriverManager
+
 
 def main() -> None:
     p.add_argument("source", type = Path, help = "path to source code")

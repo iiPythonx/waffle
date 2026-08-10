@@ -16,6 +16,7 @@ from pathlib import Path
 
 from waffle.vm.drivers import DriverManager
 
+
 class Driver:
     def __init__(self, core: DriverManager) -> None:
         core.bind_write("SET_FILENAME",        0x0040, self.write_memory_address)

@@ -1,5 +1,6 @@
 # Copyright (c) 2026 iiPython
 
+import sys
 from pathlib import Path
 
 from waffle.asm.token import ParseState, parse_file
@@ -44,7 +45,7 @@ class AssemblerError(Exception):
             self.print_code_line(line, target_line)
 
         print(f"\n\033[1;4;31mE:\033[22m {message}\033[0m")
-        exit(1)
+        sys.exit(1)
 
     def print_code_line(self, line: int, target: int) -> None:
         print(f" \033[{90 if line != target else 31}m{line + 1:03}  ", end = "")

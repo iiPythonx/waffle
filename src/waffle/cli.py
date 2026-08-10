@@ -1,5 +1,6 @@
 # Copyright (c) 2026 iiPython
 
+import sys
 from argparse import ArgumentParser
 
 p = ArgumentParser(
@@ -9,4 +10,4 @@ p = ArgumentParser(
 
 def cexit(message: str) -> None:
     print(message)
-    exit(1)
+    sys.exit(1)

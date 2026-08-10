@@ -116,7 +116,7 @@ class Debugger:
 
         except KeyboardInterrupt:
             print("\033[2J\033[H", end = "")
-            exit()
+            sys.exit()
 
     def step(self) -> None:
         sys.stdout = self.stdout

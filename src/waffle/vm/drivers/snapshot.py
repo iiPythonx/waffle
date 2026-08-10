@@ -10,7 +10,9 @@
 #   swa r1, D_MEMORY_SNAPSHOT
 
 from pathlib import Path
+
 from waffle.vm.drivers import DriverManager
+
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

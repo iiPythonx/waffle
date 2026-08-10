@@ -31,11 +31,12 @@
 #   swa r1, 0x0054  ; Halt main thread for 500ms
 
 import math
-from time import perf_counter, sleep
 from datetime import datetime
+from time import perf_counter, sleep
 from zoneinfo import ZoneInfo
 
 from waffle.vm.drivers import DriverManager
+
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

@@ -4,7 +4,9 @@
 # Purpose: Provide networking capabilities to waffle
 
 import socket
+
 from waffle.vm.drivers import DriverManager
+
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:
@@ -53,7 +55,7 @@ class Driver:
             return
 
         # Sanity checking
-        for v in {"target_host_address", "target_port", "packet_address", "packet_size"}:
+        for v in ("target_host_address", "target_port", "packet_address", "packet_size"):
             if v not in self.variables:
                 return
 

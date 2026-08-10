@@ -33,10 +33,11 @@
 #   swa r1, 0x0022  ; Send the entire memory block to the screen
 
 import sys
-import tty
 import termios
+import tty
 
 from waffle.vm.drivers import DriverManager
+
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:

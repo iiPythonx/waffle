@@ -1,19 +1,19 @@
 # Copyright (c) 2026 iiPython
 
 from waffle.asm import exception
-from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
 from waffle.asm.token import ParseState
+from waffle.isa import INSTRUCTIONS, REGISTERS, Addresses
 
 REGISTERS_BY_NAME = {reg.name: reg for reg in REGISTERS}
 INSTRUCTS_BY_VERB = {v.opcode: (k, v) for k, v in INSTRUCTIONS.items()}
 
 class Assembler:
-    def __init__(self, state: ParseState, driver_mapping: dict[str, int] = {}) -> None:
+    def __init__(self, state: ParseState, driver_mapping: dict[str, int] | None = None) -> None:
         self.data_block = bytearray([0] * Addresses.DATA.size)
         self.code_block = bytearray([0] * Addresses.CODE.size)
 
         self.state = state
-        self.driver_mapping: dict[str, int] = driver_mapping
+        self.driver_mapping: dict[str, int] = driver_mapping or {}
 
         self.line_index: int = 0
         self.code_offset: int = 0

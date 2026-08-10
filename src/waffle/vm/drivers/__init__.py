@@ -1,9 +1,10 @@
 # Copyright (c) 2026 iiPython
 
-import typing
 import importlib
+import typing
 
 from waffle.cli import cexit
+
 
 class DriverManager:
     def __init__(self, memory: bytearray, enabled_drivers: list[str]) -> None:
@@ -18,9 +19,10 @@ class DriverManager:
         for package in enabled_drivers:
             try:
                 module = importlib.import_module(f"waffle.vm.drivers.{package}")
-                driver = getattr(module, "Driver")
+                driver = module.Driver
                 if driver is None:
-                    return cexit(f"Attempted to load driver '{package}', but it has no Driver class!")
+                    cexit(f"Attempted to load driver '{package}', but it has no Driver class!")
+                    return
 
                 driver(self)
 

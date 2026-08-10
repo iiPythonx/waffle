@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+
 class Register:
     size = 1
 

@@ -20,6 +20,7 @@ import random
 
 from waffle.vm.drivers import DriverManager
 
+
 class Driver:
     def __init__(self, core: DriverManager) -> None:
         core.bind_read( "GET_RANDOM",        0x0030, self.read_random)
