@@ -30,8 +30,8 @@ waffleemu examples/clock.bin
 
 ## Specifications
 
-Last updated: July 25th, 2026  
-Version: 2.0.0
+Last updated: August 9th, 2026  
+Version: 2.2.1
 
 ### Memory
 
@@ -114,16 +114,24 @@ It's up to the driver maintainer to produce accurate documentation regarding the
 
 ### Preload
 
-You can create a label called `preload` to store strings into the data block automatically at assembly time.  
+You can create a label called `preload` to store strings or raw data into the data block automatically at assembly time.  
 Here's an example:
 
 ```asm
 preload:
-    .hello "Hello, world!"
+    hello: .string "Hello, world!"
 ```
 
 This string will be automatically loaded into memory starting at the 0x2000 block.  
 Referencing it can be done with `ldi r1, &hello`, which will load the string's memory address into R1.
+
+Available types:
+- `string` and `asciz`: encode as UTF-8 and add a null byte
+- `ascii`: encode as UTF-8
+- `byte`: encode as a one byte integer
+- `word` and `short`: encode as a two byte integer
+
+For integers, you can write their value in either decimal (`82`) or hex (`0x52`).
 
 ### Main
 

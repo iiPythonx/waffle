@@ -95,11 +95,7 @@ def parse_file(file: Path, callback: typing.Callable | None = None) -> ParseStat
             key, type, value = preload_match.groups()
             match type:
                 case "byte" | "short" | "word":
-                    value = int(value, 16 if value.startswith("0x") else 10)
-                    if type == "byte" and value > 255:
-                        raise ParseException("Cannot store a byte with a value above 255!")
-
-                    value = value.to_bytes(1 if type == "byte" else 2)
+                    value = int(value, 16 if value.startswith("0x") else 10).to_bytes(1 if type == "byte" else 2)
 
                 case "ascii" | "string" | "asciz":
                     value = value[1:-1]
