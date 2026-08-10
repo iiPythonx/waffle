@@ -54,4 +54,4 @@ def main() -> None:
 
     # Write to binary file and show status
     file.with_suffix(".bin").write_bytes(snapshot)
-    print(f"Compiled in \033[32m{elapsed * 1000:.2f}ms\033[0m to \033[32m{file.with_suffix('.bin')}\033[0m")
+    print(f"Compiled in \033[32;1m{elapsed * 1000:.2f}ms\033[0m to \033[32;1m{file.with_suffix('.bin')}\033[0m!")

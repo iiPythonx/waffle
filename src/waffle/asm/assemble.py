@@ -117,7 +117,12 @@ class Assembler:
         if terminate := subroutine_addresses.get("terminate"):
             self.data_block[0x0700:0x0702] = terminate.to_bytes(2)
 
-        if zero_jump and (main := subroutine_addresses.get("main")):
-            self.code_block[1:3] = main.to_bytes(2)
+        first_subroutine = min(subroutine_addresses, key = lambda k: subroutine_addresses[k])
+        if main := subroutine_addresses.get("main"):
+            if zero_jump:
+                self.code_block[1:3] = main.to_bytes(2)
+
+            elif first_subroutine != "main":
+                print(f"\033[33;1mWarning!\033[0m Zero-jump is \033[31mnot enabled\033[0m and the first subroutine is \033[34m{first_subroutine}\033[0m!")
 
         return self.code_block + self.data_block
