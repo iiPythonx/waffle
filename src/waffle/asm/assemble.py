@@ -8,12 +8,14 @@ REGISTERS_BY_NAME = {reg.name: reg for reg in REGISTERS}
 INSTRUCTS_BY_VERB = {v.opcode: (k, v) for k, v in INSTRUCTIONS.items()}
 
 class Assembler:
-    def __init__(self, state: ParseState, driver_mapping: dict[str, int] | None = None) -> None:
+    def __init__(self, state: ParseState, driver_keys: list[str] | None = None) -> None:
         self.data_block = bytearray([0] * Addresses.DATA.size)
         self.code_block = bytearray([0] * Addresses.CODE.size)
 
         self.state = state
-        self.driver_mapping: dict[str, int] = driver_mapping or {}
+        self.driver_mapping: dict[str, int] = {}
+        self.driver_keys: list[str] = driver_keys or []
+        self.driver_offset: int = 0x0020
 
         self.line_index: int = 0
         self.code_offset: int = 0
@@ -65,7 +67,11 @@ class Assembler:
             self.subroutines[argument].append(self.code_offset)
             return 0  # Will be replaced after initial building
 
-        if (binding := argument.upper().removeprefix("D_")) in self.driver_mapping:
+        if (binding := argument.upper().removeprefix("D_")) in self.driver_keys:
+            if binding not in self.driver_mapping:
+                self.driver_mapping[binding] = self.driver_offset
+                self.driver_offset += 2
+
             return self.driver_mapping[binding]
 
         try:

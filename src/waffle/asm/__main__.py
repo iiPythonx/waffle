@@ -15,8 +15,6 @@ def main() -> None:
     p.add_argument("source", type = Path, help = "path to source code")
     p.add_argument("-G", "--gzip", action = "store_true", default = False, help = "compress output with gzip")
     p.add_argument("-Z", "--zero-jump", action = "store_true", default = False, help = "auto jump to the main label on launch")
-    p.add_argument("-d", "--drivers", help = "enabled list of drivers, default: stdio", default = "stdio")
-    p.add_argument("-N", "--no-drivers", action = "store_true", help = "disable all drivers", default = False)
 
     args = p.parse_args()
 
@@ -27,13 +25,12 @@ def main() -> None:
 
     exception.set_file(file)
 
-    # Initialize requested drivers
+    # Initialize drivers
     # We need to do this to retrieve their name mappings
-    enabled_drivers = args.drivers.split(",") if not args.no_drivers else []
-    drivers = DriverManager(bytearray(), enabled_drivers)
+    drivers = DriverManager(bytearray())
 
     # Initialize assembler
-    asm = Assembler(parse_file(file), drivers.binding_names)
+    asm = Assembler(parse_file(file), list(drivers.binding_names.keys()))
 
     # Build snapshot
     start_time = perf_counter()
@@ -41,12 +38,11 @@ def main() -> None:
     elapsed = perf_counter() - start_time
 
     # Add in the enabled driver names
-    driver_bytes = bytearray()
-    driver_bytes.append(len(enabled_drivers))
-    for driver_name in enabled_drivers:
-        driver_bytes.extend(driver_name.encode() + b"\0")
+    heading: bytes = b""
+    for name, address in asm.driver_mapping.items():
+        heading += name.encode("utf-8") + b"\0" + address.to_bytes(2)
 
-    snapshot = driver_bytes + snapshot
+    snapshot = len(asm.driver_mapping).to_bytes(1) + heading + snapshot
 
     # Compression
     if args.gzip:

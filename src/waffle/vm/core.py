@@ -12,7 +12,7 @@ from waffle.vm.drivers import DriverManager
 REGISTERS_BY_ID = {reg.id: reg for reg in REGISTERS}
 
 class Waffle:
-    def __init__(self, enabled_drivers: list[str] | None = None, enable_debugger: bool = False) -> None:
+    def __init__(self, enabled_drivers: dict[str, int] | None = None, enable_debugger: bool = False) -> None:
         self.memory = bytearray(0x4000)
 
         # Initialize stack
@@ -24,7 +24,7 @@ class Waffle:
             self.debugger = Debugger(self.memory)
 
         # Load drivers
-        self.drivers = DriverManager(self.memory, enabled_drivers or ["stdio"])
+        self.drivers = DriverManager(self.memory, enabled_drivers or {})
 
     def read_register(self, register_id: int) -> int:
         offset = REGISTERS_BY_ID[register_id].address

@@ -4,17 +4,17 @@
 # Purpose: Provide psuedo-random number generation to waffle
 #
 # Registers:
-#   R 0x0030 - Read a random 16-bit integer
-#   W 0x0032 - Set maximum bound
+#   R GET_RANDOM - Read a random 16-bit integer
+#   W SET_RANDOM_BOUNDS - Set maximum bound
 #
 # Examples:
-#   lwa r1, 0x0030  ; Load random number between 0 - 65535 to R1
-#   swa r1, 0x0024  ; Send R1 to screen
+#   lwa r1, D_GET_RANDOM  ; Load random number between 0 - 65535 to R1
+#   swa r1, D_WRITE_INT   ; Send R1 to screen
 #
 #   ldi r1, 100
-#   swa r1, 0x0032  ; Set RNG upper bound to 100
-#   lwa r1, 0x0030  ; Load random number between 0 - 100 to R1
-#   swa r1, 0x0024  ; Send R1 to screen
+#   swa r1, D_SET_RANDOM_BOUNDS  ; Set RNG upper bound to 100
+#   lwa r1, D_GET_RANDOM         ; Load random number between 0 - 100 to R1
+#   swa r1, D_WRITE_INT          ; Send R1 to screen
 
 import random
 
@@ -23,8 +23,8 @@ from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:
-        core.bind_read( "GET_RANDOM",        0x0030, self.read_random)
-        core.bind_write("SET_RANDOM_BOUNDS", 0x0032, self.write_upper_bound)
+        core.bind("GET_RANDOM",        self.read_random)
+        core.bind("SET_RANDOM_BOUNDS", self.write_upper_bound)
 
         self.upper_bound = (2 ** 16) - 1
 

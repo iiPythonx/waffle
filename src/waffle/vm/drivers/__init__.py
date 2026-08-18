@@ -2,50 +2,52 @@
 
 import importlib
 import typing
+from pathlib import Path
 
 from waffle.cli import cexit
 
 
 class DriverManager:
-    def __init__(self, memory: bytearray, enabled_drivers: list[str]) -> None:
+    def __init__(self, memory: bytearray, enabled_drivers: dict[str, int] | None = None) -> None:
         self.memory = memory
-        self.binding_names: dict[str, int] = {}
 
-        # Mappings
-        self.read_mapping: dict[int, typing.Callable] = {}
-        self.write_mapping: dict[int, typing.Callable] = {}
+        # Handle bindings
+        self.binding_names: dict[str, typing.Callable] = {}
+        self.binding_addresses: dict[int, typing.Callable] = {}
 
         # Begin initializing drivers
-        for package in enabled_drivers:
-            try:
-                module = importlib.import_module(f"waffle.vm.drivers.{package}")
-                driver = module.Driver
-                if driver is None:
-                    cexit(f"Attempted to load driver '{package}', but it has no Driver class!")
-                    return
+        for file in Path(__file__).parent.iterdir():
+            if file.suffix != ".py" or file.name == "__init__.py":
+                continue
 
-                driver(self)
+            module = importlib.import_module(f"waffle.vm.drivers.{file.stem}")
+            driver = module.Driver
+            if driver is None:
+                cexit(f"Attempted to load driver '{file.stem}', but it has no Driver class!")
+                return
 
-            except ModuleNotFoundError:
-                cexit(f"Attempted to load driver '{package}', but it was not found!")
+            driver(self)
 
-    def bind_write(self, name: str, address: int, callback: typing.Callable) -> None:
-        self.binding_names[name] = address
-        self.write_mapping[address] = callback
+        # Move to correct MMIO addressess
+        for name, address in (enabled_drivers or {}).items():
+            self.initialize(name, address)
 
-    def bind_read(self, name: str, address: int, callback: typing.Callable) -> None:
-        self.binding_names[name] = address
-        self.read_mapping[address] = callback
+    def initialize(self, name: str, address: int) -> None:
+        if name in self.binding_names:
+            self.binding_addresses[address] = self.binding_names[name]
+
+    def bind(self, name: str, callback: typing.Callable) -> None:
+        self.binding_names[name] = callback
 
     def on_write(self, address: int, value: int) -> bool:
-        if address in self.write_mapping:
-            self.write_mapping[address](self.memory, value)
+        if address in self.binding_addresses:
+            self.binding_addresses[address](self.memory, value)
             return True
 
         return False
 
     def on_read(self, address: int) -> int | None:
-        if address in self.read_mapping:
-            return self.read_mapping[address](self.memory)
+        if address in self.binding_addresses:
+            return self.binding_addresses[address](self.memory)
 
         return None

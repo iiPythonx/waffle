@@ -10,12 +10,12 @@ from waffle.vm.drivers import DriverManager
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:
-        core.bind_write("SELECT_NET_VARIABLE", 0x0070, self.set_variable)
-        core.bind_write( "WRITE_NET_VARIABLE", 0x0072, self.write_variable)
-        core.bind_write(      "CREATE_SOCKET", 0x0074, self.create_socket)
-        core.bind_write(       "CLOSE_SOCKET", 0x0076, self.close_socket)
-        core.bind_write(           "NET_SEND", 0x0078, self.send_packet)
-        core.bind_read(         "NET_RECEIVE", 0x007A, self.receive)
+        core.bind("SELECT_NET_VARIABLE", self.set_variable)
+        core.bind( "WRITE_NET_VARIABLE", self.write_variable)
+        core.bind(      "CREATE_SOCKET", self.create_socket)
+        core.bind(       "CLOSE_SOCKET", self.close_socket)
+        core.bind(           "NET_SEND", self.send_packet)
+        core.bind(        "NET_RECEIVE", self.receive)
 
         # State
         self.socket: socket.socket | None = None

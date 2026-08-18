@@ -37,7 +37,7 @@ def main() -> None:
         cexit("Provided speed argument is negative and thus invalid.")
 
     # Fetch drivers
-    enabled_drivers, driver_offset = [], 0
+    enabled_drivers, driver_offset = {}, 0
     for _ in range(bytecode[0]):
         driver_name = ""
         for character in bytecode[driver_offset + 1:]:
@@ -46,8 +46,8 @@ def main() -> None:
 
             driver_name += chr(character)
 
-        enabled_drivers.append(driver_name)
-        driver_offset += len(driver_name) + 1
+        driver_offset += len(driver_name) + 3
+        enabled_drivers[driver_name] = int.from_bytes(bytecode[driver_offset - 1:driver_offset + 1])
 
     bytecode = bytecode[driver_offset + 1:]
 

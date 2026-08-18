@@ -4,49 +4,48 @@
 # Purpose: Provide time related utilities to waffle
 #
 # Registers:
-#   W 0x0050 - Set item to read (see OPTIONS)
-#   R 0x0052 - Read currently selected item
-#   W 0x0054 - Set memory address of strftime string
-#   W 0x0056 - Read time in strftime format to specified memory address
-#   W 0x0058 - Sleep main thread for specified duration in milliseconds
-#   W 0x005A - Set elapsed clock to zero
-#   R 0x005C - Read elapsed clock in requested unit (MONTH and YEAR unsupported)
+#   W SET_TIME_UNIT - Set item to read (see OPTIONS)
+#   R READ_TIME     - Read currently selected item
+#   W SET_TIME_FMT  - Set memory address of strftime string
+#   W READ_TIME_FMT - Read time in strftime format to specified memory address
+#   W SLEEP         - Sleep main thread for specified duration in milliseconds
+#   W ZERO_CLOCK    - Set elapsed clock to zero
+#   R READ_ELAPSED  - Read elapsed clock in requested unit (MONTH and YEAR unsupported)
 #
 # Options:
-#   0x0050 -> 0: Millisecond
-#   0x0050 -> 1: Second
-#   0x0050 -> 2: Minute
-#   0x0050 -> 3: Hour
-#   0x0050 -> 4: Day
-#   0x0050 -> 5: Month
-#   0x0050 -> 6: Year
+#   SET_TIME_UNIT -> 0: Millisecond
+#   SET_TIME_UNIT -> 1: Second
+#   SET_TIME_UNIT -> 2: Minute
+#   SET_TIME_UNIT -> 3: Hour
+#   SET_TIME_UNIT -> 4: Day
+#   SET_TIME_UNIT -> 5: Month
+#   SET_TIME_UNIT -> 6: Year
 #
 # Examples:
 #   ldi r1, 1
-#   swa r1, 0x0050  ; Set selection to SECOND
-#   lwa r1, 0x0052  ; Read into R1
-#   swa r1, 0x0024  ; Send R1 (second) to screen
+#   swa r1, D_SET_TIME_UNIT  ; Set selection to SECOND
+#   lwa r1, D_READ_TIME      ; Read into R1
+#   swa r1, D_WRITE_INT      ; Send R1 (second) to screen
 #
 #   ldi r1, 500
-#   swa r1, 0x0054  ; Halt main thread for 500ms
+#   swa r1, D_SLEEP          ; Halt main thread for 500ms
 
 import math
-from datetime import datetime
+from datetime import UTC, datetime
 from time import perf_counter, sleep
-from zoneinfo import ZoneInfo
 
 from waffle.vm.drivers import DriverManager
 
 
 class Driver:
     def __init__(self, core: DriverManager) -> None:
-        core.bind_write("SET_TIME_UNIT", 0x0050, self.write_selection)
-        core.bind_read( "READ_TIME",     0x0052, self.read_selection)
-        core.bind_write("SET_TIME_FMT",  0x0054, self.write_strftime)
-        core.bind_write("READ_TIME_FMT", 0x0056, self.read_strftime)
-        core.bind_write("SLEEP",         0x0058, self.write_sleep)
-        core.bind_write("ZERO_CLOCK",    0x005A, self.write_zero_clock)
-        core.bind_read( "READ_ELAPSED",  0x005C, self.read_elapsed)
+        core.bind("SET_TIME_UNIT", self.write_selection)
+        core.bind("READ_TIME",     self.read_selection)
+        core.bind("SET_TIME_FMT",  self.write_strftime)
+        core.bind("READ_TIME_FMT", self.read_strftime)
+        core.bind("SLEEP",         self.write_sleep)
+        core.bind("ZERO_CLOCK",    self.write_zero_clock)
+        core.bind("READ_ELAPSED",  self.read_elapsed)
 
         # State
         self.selection = 0
@@ -55,7 +54,7 @@ class Driver:
 
     @property
     def now(self) -> datetime:
-        return datetime.now(tz = ZoneInfo("localtime"))
+        return datetime.now(UTC).astimezone()
 
     def write_selection(self, memory: bytearray, value: int) -> None:
         self.selection = value
