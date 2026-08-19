@@ -6,6 +6,12 @@ terminate:
 
 main:
 
+    ; SIGINT
+    ldi r1, 2
+    swa r1, D_SIG_TARGET
+    ldi r1, terminate
+    swa r1, D_SIG_HOOK
+
     ; Send address of format string to time driver
     ldi r1, &strftime
     swa r1, D_SET_TIME_FMT

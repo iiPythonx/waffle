@@ -1,9 +1,6 @@
 preload:
     hello: .string "Hello, world!"
 
-halt:
-    hlt
-
 write:
 
     ; Load from address
@@ -12,7 +9,10 @@ write:
     ; Should we die? (hit end of string)
     ldi r7, 0
     cmp r3, r7  ; r3 = current character, r7 = null (0)
-    jeq halt    ; hit a null string terminator
+    jne continue    ; hit a null string terminator
+    hlt
+
+    continue:
 
     ; Send character to terminal
     swa r3, D_WRITE_CHR

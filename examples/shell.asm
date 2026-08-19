@@ -441,6 +441,12 @@ shell:
 main:
     cal init_table
 
+    ; SIGINT
+    ldi r1, 2
+    swa r1, D_SIG_TARGET
+    ldi r1, terminate
+    swa r1, D_SIG_HOOK
+
     ; Greeting
     ldi r1, &clear
     swa r1, D_WRITE_STR

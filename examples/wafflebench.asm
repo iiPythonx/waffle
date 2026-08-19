@@ -101,6 +101,12 @@ scoring:
 
 main:
 
+    ; SIGINT
+    ldi r1, 2
+    swa r1, D_SIG_TARGET
+    ldi r1, terminate
+    swa r1, D_SIG_HOOK
+
     ; Set time unit to MILLISECONDS
     ldi r1, 0
     swa r1, D_SET_TIME_UNIT

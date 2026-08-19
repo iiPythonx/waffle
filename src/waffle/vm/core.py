@@ -200,7 +200,3 @@ class Waffle:
                 f"Write at: {offset} ({hex(offset)}), would end at {last_byte_offset} ({hex(last_byte_offset)}), which is outside 0x4000.")
 
         self.memory[offset:offset + len(data)] = data
-
-    def terminate(self) -> None:
-        if (terminate_instruction := int.from_bytes(self.memory[0x2700:0x2702])):
-            self.write_register(0xA, terminate_instruction)

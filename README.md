@@ -17,7 +17,7 @@ source .venv/bin/activate
 uv pip install -e .
 
 # Run the clock example
-waffleasm -Z -d time,stdio examples/clock.asm
+waffleasm -Z examples/clock.asm
 waffleemu examples/clock.bin
 ```
 
@@ -137,12 +137,6 @@ For integers, you can write their value in either decimal (`82`) or hex (`0x52`)
 
 No main label is required to be used, as the only requirement of waffle assembly is that ONE label exists (of which preload does not count).  
 If you do add a main label, however, you will likely want to make use of the `-Z` (`--zero-jump`) flag on `waffleasm`, which will auto jump to main on program init.
-
-### Terminate
-
-If you choose to add a `terminate` label to your code, it will automatically have its memory address loaded into byte `0x2700` in the DATA block.  
-
-This block is read when CTRL+C is pressed, and the CPU will immediately jump to whatever instructions are stored there. This does mean you need to manually call `HLT` to stop execution though.
 
 ## Debugger
 

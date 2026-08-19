@@ -127,6 +127,12 @@ terminate:
 
 main:
 
+    ; SIGINT
+    ldi r1, 2
+    swa r1, D_SIG_TARGET
+    ldi r1, terminate
+    swa r1, D_SIG_HOOK
+
     ; Hide cursor
     ldi r1, &invis
     swa r1, D_WRITE_STR

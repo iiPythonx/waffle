@@ -13,17 +13,18 @@ class Assembler:
         self.code_block = bytearray([0] * Addresses.CODE.size)
 
         self.state = state
-        self.driver_mapping: dict[str, int] = {}
-        self.driver_keys: list[str] = driver_keys or []
-        self.driver_offset: int = 0x0020
-
         self.line_index: int = 0
         self.code_offset: int = 0
         self.subroutines: dict[str, list[int]] = {}
 
+        # Strings
         self.string_mapping: dict[str, int] = {}
         if state.preload:
             self.string_mapping = self.write_preload(state.preload)
+
+        # Handle drivers
+        self.driver_keys: list[str] = driver_keys or []
+        self.driver_mapping: dict[str, int] = {}
 
     def write_code(self, data: bytes) -> None:
         data_size: int = len(data)
@@ -69,8 +70,7 @@ class Assembler:
 
         if (binding := argument.upper().removeprefix("D_")) in self.driver_keys:
             if binding not in self.driver_mapping:
-                self.driver_mapping[binding] = self.driver_offset
-                self.driver_offset += 2
+                self.driver_mapping[binding] = 0x0020 + len(self.driver_mapping)
 
             return self.driver_mapping[binding]
 
@@ -120,9 +120,6 @@ class Assembler:
             for subroutine, addresses in self.subroutines.items():
                 for address in addresses:
                     self.code_block[address:address + 2] = subroutine_addresses[subroutine].to_bytes(2)
-
-            if terminate := subroutine_addresses.get("terminate"):
-                self.data_block[0x0700:0x0702] = terminate.to_bytes(2)
 
             first_subroutine = min(subroutine_addresses, key = lambda k: subroutine_addresses[k])
             if main := subroutine_addresses.get("main"):

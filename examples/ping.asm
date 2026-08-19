@@ -235,6 +235,12 @@ terminate:
 
 main:
 
+    ; sigint
+    ldi r1, 2
+    swa r1, D_SIG_TARGET
+    ldi r1, terminate
+    swa r1, D_SIG_HOOK
+
     ; interface
     ldi r1, &ping
     swa r1, D_WRITE_STR
