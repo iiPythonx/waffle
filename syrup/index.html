@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang = "en">
+    <head>
+        <meta charset = "utf-8">
+        <meta name = "darkreader-lock" />
+
+        <!-- CSS -->
+        <link rel = "stylesheet" href = "/assets/main.css">
+        <link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/@xterm/xterm/css/xterm.css">
+
+        <title>Syrup</title>
+    </head>
+    <body>
+        <div class = "row">
+            <section id = "console">
+                <h3>Console</h3>
+            </section>
+            <section>
+                <h3>Display</h3>
+                <canvas width = "250" height = "250"></canvas>
+            </section>
+        </div>
+        <div class = "row">
+            <section>
+                <h3>Instructions</h3>
+            </section>
+            <section>
+                <h3>Control</h3>
+                <label for = "bin-input">
+                    <img src = "/assets/icons/upload.svg">
+                    Select file to emulate.
+                </label>
+                <input id = "bin-input" type = "file" accept = ".bin">
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>Syrup v0.1.0</footer>
+
+        <!-- JS -->
+        <script src = "https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
+        <script src = "https://cdn.jsdelivr.net/npm/@xterm/addon-fit/lib/addon-fit.js"></script>
+        <script>
+            const terminal = new Terminal();
+            const addon = new FitAddon.FitAddon();
+            terminal.loadAddon(addon);
+            terminal.open(document.getElementById("console"));
+            addon.fit();
+        </script>
+    </body>
+</html>
