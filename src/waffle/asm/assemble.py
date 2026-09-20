@@ -8,7 +8,7 @@ REGISTERS_BY_NAME = {reg.name: reg for reg in REGISTERS}
 INSTRUCTS_BY_VERB = {v.opcode: (k, v) for k, v in INSTRUCTIONS.items()}
 
 class Assembler:
-    def __init__(self, state: ParseState, driver_keys: list[str] | None = None) -> None:
+    def __init__(self, state: ParseState) -> None:
         self.data_block = bytearray([0] * Addresses.DATA.size)
         self.code_block = bytearray([0] * Addresses.CODE.size)
 
@@ -23,7 +23,6 @@ class Assembler:
             self.string_mapping = self.write_preload(state.preload)
 
         # Handle drivers
-        self.driver_keys: list[str] = driver_keys or []
         self.driver_mapping: dict[str, int] = {}
 
     def write_code(self, data: bytes) -> None:
@@ -68,11 +67,11 @@ class Assembler:
             self.subroutines[argument].append(self.code_offset)
             return 0  # Will be replaced after initial building
 
-        if (binding := argument.upper().removeprefix("D_")) in self.driver_keys:
-            if binding not in self.driver_mapping:
-                self.driver_mapping[binding] = 0x0020 + len(self.driver_mapping)
+        if (binding := argument.upper()).startswith("D_"):
+            if binding[2:] not in self.driver_mapping:
+                self.driver_mapping[binding[2:]] = 0x0020 + len(self.driver_mapping)
 
-            return self.driver_mapping[binding]
+            return self.driver_mapping[binding[2:]]
 
         try:
             value = int(argument)

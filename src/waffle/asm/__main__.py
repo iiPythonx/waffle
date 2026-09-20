@@ -8,7 +8,6 @@ from waffle.asm import exception
 from waffle.asm.assemble import Assembler
 from waffle.asm.token import parse_file
 from waffle.cli import cexit, p
-from waffle.vm.drivers import DriverManager
 
 
 def main() -> None:
@@ -25,12 +24,8 @@ def main() -> None:
 
     exception.set_file(file)
 
-    # Initialize drivers
-    # We need to do this to retrieve their name mappings
-    drivers = DriverManager(bytearray())
-
     # Initialize assembler
-    asm = Assembler(parse_file(file), list(drivers.binding_names.keys()))
+    asm = Assembler(parse_file(file))
 
     # Build snapshot
     start_time = perf_counter()

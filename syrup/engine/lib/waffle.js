@@ -1,6 +1,7 @@
 // Copyright (c) 2026 iiPython
 
 import { DriverManager } from "../drivers/core.js";
+import { ScreenDriver } from "../drivers/screen.js";
 import { StdioDriver } from "../drivers/stdio.js";
 import { TimeDriver } from "../drivers/time.js";
 import { ARGUMENT_SIZES, REGISTERS_BY_ID, INSTRUCTIONS, Addresses } from "../isa.js";
@@ -83,6 +84,7 @@ export class Waffle {
 
         new StdioDriver(this.drivers, this.emit);
         new TimeDriver(this.drivers, this.emit);
+        new ScreenDriver(this.drivers, this.emit);
 
         // Populate RAM
         this.ram.set(bytecode.subarray(offset), Addresses.CODE.start);
