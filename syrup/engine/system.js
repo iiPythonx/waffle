@@ -1,5 +1,8 @@
 // Copyright (c) 2026 iiPython
 
+import { DriverManager } from "./drivers/core.js";
+import { StdioDriver } from "./drivers/stdio.js";
+import { TimeDriver } from "./drivers/time.js";
 import { ARGUMENT_SIZES, REGISTERS_BY_ID, INSTRUCTIONS, Addresses } from "./isa.js";
 
 // Utilities
@@ -13,6 +16,9 @@ class Waffle {
 
         // Initialize SP
         this.write_reg(0xC, 2);
+
+        // Drivers
+        this.drivers = null;
     }
 
     // Stack
@@ -65,7 +71,13 @@ class Waffle {
             offset += 2;
         }
 
-        // this.drivers = drivers;
+        // Initialize drivers
+        this.drivers = new DriverManager(this.ram, drivers);
+
+        new StdioDriver(this.drivers);
+        new TimeDriver(this.drivers);
+
+        // Populate RAM
         this.ram.set(bytecode.subarray(offset), Addresses.CODE.start);
     }
 
@@ -140,7 +152,10 @@ class Waffle {
                 const data_size = instruction.opcode[1] === "B" ? 1 : 2;
                 if (instruction.opcode[2] === "R") address = this.read_reg(address);
 
-                this.write_reg(args[0], this[data_size === 1 ? "read_byte" : "read_word"](address));
+                this.write_reg(
+                    args[0],
+                    this.drivers.read(address) ?? this[data_size === 1 ? "read_byte" : "read_word"](address)
+                );
                 break;
             }
 
@@ -154,7 +169,7 @@ class Waffle {
                 if (instruction.opcode[2] === "R") address = this.read_reg(address);
 
                 const value = this.read_reg(args[0]);
-                this[data_size === 1 ? "write_byte" : "write_word"](address, value);
+                if (!this.drivers.write(address, value)) this[data_size === 1 ? "write_byte" : "write_word"](address, value);
                 break;
             }
 
@@ -250,12 +265,5 @@ document.getElementById("bin-input").addEventListener("change", async (e) => {
     waffle.load(new Uint8Array(await file.arrayBuffer()));
 
     // while (true) waffle.step();
-    setInterval(() => waffle.step(), 1000);
+    setInterval(() => waffle.step(), 1);
 });
-
-// Terminal initialization
-const terminal = new Terminal();
-const addon = new FitAddon.FitAddon();
-terminal.loadAddon(addon);
-terminal.open(document.getElementById("console"));
-addon.fit();
