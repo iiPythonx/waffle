@@ -40,12 +40,6 @@
         <!-- JS -->
         <script src = "https://cdn.jsdelivr.net/npm/@xterm/xterm/lib/xterm.js"></script>
         <script src = "https://cdn.jsdelivr.net/npm/@xterm/addon-fit/lib/addon-fit.js"></script>
-        <script>
-            const terminal = new Terminal();
-            const addon = new FitAddon.FitAddon();
-            terminal.loadAddon(addon);
-            terminal.open(document.getElementById("console"));
-            addon.fit();
-        </script>
+        <script src = "/engine/system.js" type = "module"></script>
     </body>
 </html>
