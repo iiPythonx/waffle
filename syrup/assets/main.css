@@ -39,6 +39,23 @@ div.row {
     &:first-child section {
         height: 400px;
     }
+
+    &:not(:first-child) section {
+        max-height: 200px;
+    }
+}
+
+/* Instruction log */
+#instruction-log {
+    overflow-y: scroll;
+    max-height: 100%;
+}
+
+/* Control */
+#section-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* Footer */
@@ -53,17 +70,35 @@ input {
     display: none;
 }
 
-label {
-    width: fit-content;
+button, label {
+    background: none;
+    padding: 4px 12px;
+    border: 1px solid #fff;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
-    padding: 4px 12px;
-    border: 1px solid #fff;
+    transform: opacity .25s ease;
 
     img {
         position: relative;
         top: 1px;
     }
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+/* Color coding */
+.instruction {
+    color: #197fbe;
+}
+
+.hex-offset {
+    color: #139556;
+}
+
+.hex-arg {
+    color: #e93535;
 }

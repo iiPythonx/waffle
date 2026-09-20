@@ -12,8 +12,9 @@
 //   W READ_STR  - Read an entire string from stdin into memory at offset 0x2100
 
 export class StdioDriver {
-    constructor(core) {
+    constructor(core, emit) {
         this.core = core;
+        this.emit = emit;
 
         // Bindings
         core.bind("WRITE_CHR", this.write_character.bind(this), "write");
@@ -22,17 +23,10 @@ export class StdioDriver {
         core.bind("CLEAR_SCR", this.clear_screen.bind(this),    "write");
         core.bind("READ_CHR",  this.read_character.bind(this),  "read");
         core.bind("READ_STR",  this.read_string.bind(this),     "write");
-
-        // Terminal initialization
-        this.terminal = new Terminal({ convertEol: true });
-        const addon = new FitAddon.FitAddon();
-        this.terminal.loadAddon(addon);
-        this.terminal.open(document.getElementById("console"));
-        addon.fit();
     }
 
     write_character(ram, value) {
-        this.terminal.write(String.fromCharCode(value));
+        this.emit("stdio_write", String.fromCharCode(value));
     }
 
     write_string(ram, value) {
@@ -42,15 +36,15 @@ export class StdioDriver {
             if (byte === 0) break;
             output += String.fromCharCode(byte);
         }
-        this.terminal.write(output);
+        this.emit("stdio_write", output);
     }
 
     write_integer(ram, value) {
-        this.terminal.write(value.toString());
+        this.emit("stdio_write", value.toString());
     }
 
     clear_screen() {
-        this.terminal.clear()
+        this.emit("stdio_wipe");
     }
 
     read_character() {

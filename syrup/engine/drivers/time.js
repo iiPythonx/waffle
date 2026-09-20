@@ -28,8 +28,9 @@ const ENCODER = new TextEncoder();
 const DECODER = new TextDecoder();
 
 export class TimeDriver {
-    constructor(core) {
+    constructor(core, emit) {
         this.core = core;
+        this.emit = emit;
 
         // Bindings
         core.bind("SET_TIME_UNIT", this.write_selection.bind(this),  "write");
