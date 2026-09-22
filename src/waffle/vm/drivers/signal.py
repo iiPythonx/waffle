@@ -4,7 +4,7 @@
 # Purpose: Provide signal handling capabilities to waffle
 
 import signal
-import typing
+from types import FunctionType
 
 from waffle.isa import REGISTERS
 from waffle.vm.drivers import DriverManager
@@ -32,5 +32,5 @@ class Driver:
 
     def reset_signal(self, memory: bytearray, value: int) -> None:
         existing_signal = signal.getsignal(self.targeted_signal)
-        if isinstance(existing_signal, typing.Callable) and existing_signal.__name__ == "<lambda>":
+        if isinstance(existing_signal, FunctionType) and existing_signal.__name__ == "<lambda>":
             signal.signal(self.targeted_signal, signal.SIG_DFL)

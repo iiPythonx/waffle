@@ -2,7 +2,6 @@
 
 import gzip
 from pathlib import Path
-from time import sleep
 
 from waffle.cli import cexit, p
 from waffle.isa import Addresses
@@ -10,7 +9,6 @@ from waffle.vm.core import Waffle
 
 
 def main() -> None:
-    p.add_argument("-s", "--speed", type = int, help = "emulation speed in hertz, default: no limit", default = 0)
     p.add_argument("-D", "--debug", action = "store_true", help = "enable the debugger", default = False)
     p.add_argument("executable", type = Path, help = "path to compiled executable")
 
@@ -56,20 +54,11 @@ def main() -> None:
         enabled_drivers = enabled_drivers,
         enable_debugger = args.debug
     )
-
-    system.write_range(bytecode[:Addresses.CODE.size], Addresses.CODE.start)
-    system.write_range(bytecode[Addresses.CODE.size:], Addresses.CODE.end)
+    system.write_range(bytecode, Addresses.CODE.start)
 
     if system.enable_debugger:
         system.debugger.init()
 
     # System loop
-    delay = 1 / speed if speed != 0 else 0
     while True:
-        try:
-            system.step()
-            sleep(delay)
-
-        except KeyboardInterrupt:
-            system.terminate()
-
+        system.step()
