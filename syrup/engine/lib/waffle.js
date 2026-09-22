@@ -6,8 +6,6 @@ import { StdioDriver } from "../drivers/stdio.js";
 import { TimeDriver } from "../drivers/time.js";
 import { ARGUMENT_SIZES, REGISTERS_BY_ID, INSTRUCTIONS, Addresses } from "../isa.js";
 
-const hex = (n) => `0x${n.toString(16).padStart(4, "0")}`;
-
 export class Waffle {
     constructor(emit) {
         this.ram = new Uint8Array(Addresses.STACK.end);
@@ -99,7 +97,10 @@ export class Waffle {
         const opcode = this.read_byte(offset);
 
         const instruction = INSTRUCTIONS[opcode];
-        if (!instruction) throw new Error(`Found invalid instruction ${hex(opcode)} at ${hex(offset)}!`);
+        if (!instruction) {
+            this.emit("waffle_invalid_instruction", { opcode, offset });
+            return false;
+        }
         
         // Read arguments
         let read_offset = 1;

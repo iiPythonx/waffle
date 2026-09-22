@@ -42,15 +42,15 @@ const handlers = {
 
         const offset_elem = document.createElement("span");
         offset_elem.className = "hex-offset";
-        offset_elem.textContent = hex(offset);
+        offset_elem.innerText = hex(offset);
 
         const instruction_elem = document.createElement("span");
         instruction_elem.className = "instruction";
-        instruction_elem.textContent = instruction.opcode;
+        instruction_elem.innerText = instruction.opcode;
 
         const argument_element = document.createElement("span");
         argument_element.className = "hex-arg";
-        argument_element.textContent = args.map(hex).join(" ");
+        argument_element.innerText = args.map(hex).join(" ");
 
         div.append(offset_elem, " | ", instruction_elem, " ", argument_element);
 
@@ -60,6 +60,18 @@ const handlers = {
 
     waffle_register_update(data) {
         for (const [k, v] of Object.entries(data)) document.getElementById(`r-${k}`).innerText = v;
+    },
+
+    waffle_invalid_instruction(data) {
+        const { opcode, offset } = data;
+        DOM.instructionLog.innerHTML = `
+            <span>
+                Found invalid instruction 
+                <span class = "hex-arg">${hex(opcode)}</span> 
+                at 
+                <span class = "hex-offset">${hex(offset)}!</span>
+            </span>
+        `;
     }
 };
 
@@ -106,8 +118,8 @@ DOM.binInput.addEventListener("change", async (e) => {
     section.innerHTML = CONTROL_TEMPLATE;
 
     document.getElementById("btn-stop").addEventListener("click", () => {
-        worker.postMessage({ type: "STOP" });
         DOM.instructionLog.innerHTML = "";
+        worker.postMessage({ type: "STOP" });
         document.getElementById("mode").innerText = "MANUAL";
     });
 
@@ -118,6 +130,9 @@ DOM.binInput.addEventListener("change", async (e) => {
     });
 
     document.getElementById("btn-step").addEventListener("click", () => {
+        DOM.instructionLog.innerHTML = "";
+        worker.postMessage({ type: "STOP" });
         worker.postMessage({ type: "STEP" });
+        document.getElementById("mode").innerText = "MANUAL";
     });
 });
